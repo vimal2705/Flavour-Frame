@@ -4,6 +4,8 @@ import { common } from "../config/call";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
 import { auth } from "../config/call";
+import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 
 const CardItem = ({ title, children }) => {
@@ -40,6 +42,7 @@ const Selector = ({ list }) => {
 const Category = () => {
   const [data, setData] = useState([]);
   const [params, setParams] = useState({ uid: "", name: "" });
+  const token = localStorage.getItem("token");
 
   const fetchApiData = () => {
     common.getCollection().then(({ data }) => {
@@ -47,7 +50,10 @@ const Category = () => {
     });
   };
   useEffect(() => {
-    fetchApiData();
+    if (token) {
+      
+      fetchApiData();
+    }
   }, []);
 
   const onAdd = () => {
@@ -105,17 +111,29 @@ const Category = () => {
 const SettingScreen = (props) => {
   const [user, setUser] = useState(undefined);
   const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate()
   useEffect(() => {
+    setLoading(true)
     if (token) {
       auth.userDetail().then(({ data }) => {
         setUser(data.data.user);
+        setLoading(false)
+
       });
+    }else{
+      navigate("/")
+      setLoading(false)
+
     }
   }, [token]);
 
   return (
-    <div className=" bg-black h-screen pt-[100px] max-h-[100vh] overflow-auto ">
+    <div lassName=" bg-black h-screen pt-[100px] max-h-[100vh]">
+    {
+      loading ? <Loader/> :
+      <div className=" bg-black h-screen pt-[100px] max-h-[100vh] overflow-auto ">
       <div className="px-[20px] max-md:flex-col flex gap-4">
         <div className="flex flex-col gap-4 flex-1">
           <CardItem title="Company Name">{user?.company_name}</CardItem>
@@ -138,6 +156,9 @@ const SettingScreen = (props) => {
         </div>
       </div>
     </div>
+    }
+    </div>
+    
   );
 };
 

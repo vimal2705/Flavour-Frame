@@ -14,7 +14,7 @@ import * as XLSX from 'xlsx';
 import * as Filesaver from 'file-saver'
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from '@mui/icons-material/Cancel';
-
+import Loader from "../components/Loader";
 
 
 import '../css/Dashboard.css'
@@ -26,8 +26,13 @@ const ExcelModal = ({ isOpen, onClose }) => {
   const [selectedDropdown, setSelectedDropdown] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    fectchData()    
+    if (token) {
+      
+      fectchData()    
+    }
   }, []);
   const fectchData = () => {
     common.getCollection().then(({ data: res }) => {
@@ -218,11 +223,15 @@ const CategoryModel = ({isOpen, onClose})=> {
   const Category = () => {
     const [data, setData] = useState([]);
     const [params, setParams] = useState({ uid: "", name: "" });
-  
+    const token = localStorage.getItem("token");
+
     const fetchApiData = () => {
-      common.getCollection().then(({ data }) => {
-        setData(data.data.collectionData.recordset);
-      });
+      if (token) {
+        common.getCollection().then(({ data }) => {
+          setData(data.data.collectionData.recordset);
+        });
+      }
+     
     };
     useEffect(() => {
       fetchApiData();
@@ -305,7 +314,7 @@ const CategoryModel = ({isOpen, onClose})=> {
 }
 
 
-function Dashboard() {
+const Dashboard = () =>  {
   const token = localStorage.getItem("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInputValue, setModalInputValue] = useState('');
@@ -313,6 +322,7 @@ function Dashboard() {
   const [data, setData] = useState([]);
   const [isModalExelOpen, setIsModalExcelOpen] = useState(false);
   const [isModalcategoryOpen, setIsModalCategoryOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
   const onLogout = () => {
     localStorage.clear();
@@ -334,6 +344,8 @@ function Dashboard() {
     setIsModalExcelOpen(false);
   };
     useEffect(() => {
+      setLoading(true)
+      if (loading) {
         $(document).ready(function () {
           // Toggle checkbox within .collectionItem on click
           $(".collectionItem").click(function (event) {
@@ -385,9 +397,13 @@ function Dashboard() {
             }
           });
         });
+      }
+        setLoading(false)
+
       }, []);
 
       useEffect(() => {
+        setLoading(true)
         if (token) {
           auth.userDetail().then(({ data }) => {
             setUser(data.data.user);
@@ -395,10 +411,15 @@ function Dashboard() {
             fetchListing(87)
             if(data.data.user.company_name !== null){
               setIsModalOpen(false)
+              setLoading(false)
             } else{
               setIsModalOpen(true)
+              setLoading(false)
             }
           });
+        }else{
+          navigate("/")
+          setLoading(false)
         }
       }, [token]);
 
@@ -436,7 +457,9 @@ function Dashboard() {
         }
       };
   return (
-    <div className="fullWidthContainer">
+    <>
+    {
+      loading ? <Loader/> :<div className="fullWidthContainer">
       <div className="sideNavigation">
         <img className="dashboardLogo" src={dashboardLogo} alt="Dashboard Logo" />
         <ul>
@@ -510,6 +533,9 @@ function Dashboard() {
 isOpen={isModalcategoryOpen}
 onClose={handleClosecategoryModal}      />
     </div>
+    }
+    </>
+    
   )
 }
 

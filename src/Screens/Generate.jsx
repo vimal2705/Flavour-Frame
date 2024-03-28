@@ -14,12 +14,16 @@ import { auth,common } from "../config/call";
 import CardItem from "../components/CardItem";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Loader from "../components/Loader";
+
 
 const Generate = () => {
   const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [user, setUser] = useState(undefined);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   function formatDate(dateString) {
@@ -34,17 +38,23 @@ const Generate = () => {
   }
 
   const onLogout = () => {
+    setLoading(true)
     localStorage.clear();
     setTimeout(() => {
       navigate("/");
+      setLoading(false)
     }, 500);
+
   };
     useLayoutEffect(()=>{
+      setLoading(true)
       fetchListing()
     },[])
 
   useEffect(() => {
-
+    setLoading(false)
+if (loading) {
+  
     $(document).ready(function () {
       // Toggle checkbox within .collectionItem on click
       $(".collectionItem").click(function (event) {
@@ -81,15 +91,22 @@ const Generate = () => {
         }
       });
     });
+  }
+  setLoading(false)
   }, []);
-
   useEffect(() => {
+    setLoading(true)
 
     if (token) {
       auth.userDetail().then(({ data }) => {
         setUser(data.data.user);
       });
+      setLoading(false)
+    }else{
+      setLoading(false)
+      navigate("/")
     }
+
   }, [token]);
 
 
@@ -109,9 +126,12 @@ const Generate = () => {
         }
         return acc;
       }, []);
-      console.log("groupedData",groupedData);
+      setLoading(false)
       setData(groupedData);
-    });
+    }).catch((err)=>{
+      console.log("err",err);
+      setLoading(false)
+    })
   };
 
   const handleImageChange = (e) => {
@@ -125,37 +145,67 @@ const Generate = () => {
       input.click();
   };
 const onGenerate = (param) => {
+setLoading(true)
   console.log("Param",param);
   const token = localStorage.getItem("token");
   if (!token) {
     setTimeout(() => {
       window.location.href = "/login";
     }, 500);
+    setLoading(false)
   } else {
     const formData = new FormData();
     
     const key = typeof param === "string" ? "prompt" : "image";
-    formData.append("image",{  
-      param,
-    name: param.name,
-    type: "image/png"});
-  //   if (typeof param === "string") {
-  //     formData.append(key, param);
-  //   }else{
-  //     const fileURI = URL.createObjectURL(param);
-  //     formData.append(key, {
-  //       fileURI,
-  //       name:param.name,
-  //       type: param.type
-  //   })  
-  //  }
-   common.generateImage(formData).then(fetchListing);
+    formData.append(key, param, param.name);
+    console.log("key, param, param.name",key, param, param.name);
+    if (typeof param === "string") {
+      formData.append(key, param);
+         common.generateImage(formData).then(() => {fetchListing()
+          toast.success("Success")
+          setLoading(true)
+        }).catch((err)=> {
+          console.log("err",err);
+          toast.error("Something went wrong")
+          setLoading(true)
+        })
+    }else{
+      var myHeaders = new Headers();
+      const Bearer=  "Bearer " + localStorage.getItem("token")
+      myHeaders.append("Authorization", Bearer);
+     
+      var formdata = new FormData();
+      formdata.append("image", param, "_Maha Shivaratri Post.png");
+      
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+      };
+      const Base = process.env.REACT_APP_API_URL
+      fetch(`${Base}/api/v1`, requestOptions)
+        .then(response => response.text())
+        .then(result => {console.log(result)
+          fetchListing()
+          toast.success("Image uploaded")
+          setLoading(false)
+        })
+        .catch(error => {
+          console.log('error', error)
+          toast.error("Something went wrong")
+          setLoading(false)
+        });
+   }
 setSearchValue("")
   }
 
 };
   return (
-    <div className="fullWidthContainer">
+    <>
+    {
+      loading ? <Loader/> : 
+      <div className="fullWidthContainer">
       <div className="sideNavigation">
         <img
           className="dashboardLogo"
@@ -232,6 +282,8 @@ setSearchValue("")
         </div>
       </div>
     </div>
+}
+      </>   
   );
 };
 

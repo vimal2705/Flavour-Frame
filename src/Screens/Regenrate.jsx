@@ -8,6 +8,8 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from '@mui/icons-material/Cancel';
+import Loader from "../components/Loader";
 
 const Item = ({ data, onupdate,index,index1}) => {
     const [pluValue, setPluValue] = useState();
@@ -15,8 +17,15 @@ const Item = ({ data, onupdate,index,index1}) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [isSelected, setisSelected] = useState(data.isSelected);
+    const navigate = useNavigate()
+    const token = localStorage.getItem("token");
+
+    
     useEffect(() => {
-      fectchData()    
+      if (token) {
+        
+        fectchData()    
+      }
     }, []);
     const fectchData = () => {
       common.getCollection().then(({ data: res }) => {
@@ -31,6 +40,7 @@ const Item = ({ data, onupdate,index,index1}) => {
     useEffect(() => {
       if (data.plu) setPluValue(data.plu) 
       if(data.isSelected) setisSelected(data.isSelected)
+    
     }, [data.plu,data.isSelected]);
   
     const onSubmit = () => {
@@ -161,27 +171,25 @@ const ReGenerate = () => {
   const [searchValue, setSearchValue] = useState("");
   const [user, setUser] = useState(undefined);
   const [keyword, setKeyword] = useState(location.state?.keyword || "");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true)
+    if (token) {
     if (location.state?.id) {
       common.getDetails(location.state?.id).then(({ data }) => {
         console.log("data",data)
         setData(data.data);
+        setLoading(false)
       });
     }
+  }else{
+    navigate("/")
+    setLoading(false)
+  }
   }, [location]);
-
-
-//   useEffect(() => {
-//     if (token) {
-//       fetchListing();
-//       auth.userDetail().then(({ data }) => {
-//         setUser(data.data.user);
-//       });
-//     }
-//   }, [token]);
 
   const fetchListing = () => {
     common.getListing().then(({ data }) => {
@@ -194,24 +202,7 @@ const ReGenerate = () => {
     const selectedImage = e.target.files[0];
     setSearchValue(selectedImage);
   };
-  const onUpload = () => {
 
-      const input = document.getElementById("file-input");
-      input.click();
-  };
-const onGenerate = (param) => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 500);
-  } else {
-    const formData = new FormData();
-    const key = typeof param === "string" ? "prompt" : "image";
-    formData.append(key, param);
-    common.generateImage(formData).then(fetchListing);
-  }
-};
 
 const onupdate = (updatedata,id,index1) => {
     var newdata = {...data}
@@ -234,30 +225,43 @@ const onupdate = (updatedata,id,index1) => {
   };
 
   return (
-    <div className=" bg-black h-screen pt-[100px] max-h-[100vh] overflow-auto">
-         <div className="flex justify-center items-center my-4">
-        <input
-          type="text"
-          placeholder="Keyword"
-          value={keyword}
-          className="block mr-2 px-4 py-2 rounded border border-black"
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <button
-          onClick={() => handleRegenerate(keyword)}
-          className="px-4 py-2 bg-gray-800 text-white rounded"
-        >
-          Regenerate
-        </button>
-      </div>
-     {data && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 px-[5%] my-4">
-          {data.imageData?.map((item,index1) => (item.imagineData.map((item,index) => (
-            <Item data={item} onupdate={onupdate} index={index} index1={index1} key={index}/>
-            ))))}
+    <>
+    {  
+          loading ? <Loader/> : <div className=" bg-black h-screen pt-[100px] max-h-[100vh] overflow-auto">
+          <div className="flex mx-20"
+          onClick={() => navigate('/generate')}
+          >
+            <CancelIcon sx={{
+              fontSize:30,
+              color:"#fff"
+            }}/>
+          </div>
+             <div className="flex justify-center items-center my-4">
+            <input
+              type="text"
+              placeholder="Keyword"
+              value={keyword}
+              className="block mr-2 px-4 py-2 rounded border border-black"
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            <button
+              onClick={() => handleRegenerate(keyword)}
+              className="px-4 py-2 bg-gray-800 text-white rounded"
+            >
+              Regenerate
+            </button>
+          </div>
+         {data && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 px-[5%] my-4">
+              {data.imageData?.map((item,index1) => (item.imagineData.map((item,index) => (
+                <Item data={item} onupdate={onupdate} index={index} index1={index1} key={index}/>
+                ))))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+    }
+    </>
+    
   );
 };
 

@@ -8,6 +8,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import SaveIcon from "@mui/icons-material/Save";
 import { toast } from "react-toastify";
 import {  useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const Item = ({ data, onupdate,index,index1}) => {
   const [pluValue, setPluValue] = useState();
@@ -15,8 +16,12 @@ const Item = ({ data, onupdate,index,index1}) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSelected, setisSelected] = useState(data.isSelected);
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    fectchData()    
+    if (token) {
+      fectchData()    
+    }
   }, []);
   const fectchData = () => {
     common.getCollection().then(({ data: res }) => {
@@ -155,6 +160,8 @@ const DetailScreen = (props) => {
   const location = useLocation();
   const [data, setData] = useState(undefined);
   const [keyword, setKeyword] = useState(location.state?.keyword || "");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (location.state?.id) {
@@ -202,7 +209,10 @@ const DetailScreen = (props) => {
   return (
     <div className=" bg-black h-screen pt-[100px] max-h-[100vh] overflow-auto">
       {/* Input field for keyword */}
-      <div className="flex justify-center items-center my-4">
+      {
+        loading ? <Loader/>: 
+        <>
+         <div className="flex justify-center items-center my-4">
         <input
           type="text"
           placeholder="Keyword"
@@ -225,6 +235,9 @@ const DetailScreen = (props) => {
             ))))}
         </div>
       )}
+        </>
+      }
+     
     </div>
   );
 };

@@ -40,6 +40,7 @@ const Selector = ({ list }) => {
 const Category = () => {
   const [data, setData] = useState([]);
   const [params, setParams] = useState({ uid: "", name: "" });
+  const token = localStorage.getItem("token");
 
   const fetchApiData = () => {
     common.getCollection().then(({ data }) => {
@@ -47,7 +48,10 @@ const Category = () => {
     });
   };
   useEffect(() => {
-    fetchApiData();
+    if (token) {
+      
+      fetchApiData();
+    }
   }, []);
 
   const onAdd = () => {
