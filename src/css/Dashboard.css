@@ -1,0 +1,351 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+*,
+ul,
+li,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+body {
+ 
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  width: 1184px;
+}
+
+.fullWidthContainer {
+  display: flex;
+  align-items: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.sideNavigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: black;
+  height: 100vh;
+  width: 220px;
+  color: white;
+  padding: 2rem 1rem;
+  gap: 1rem;
+  position: fixed;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.sideNavigation a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  position: relative;
+  font-weight: 500;
+}
+.sideNavigation a::after {
+  content: "";
+  width: 0%;
+  height: 2px;
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  background: rgb(255, 255, 255);
+}
+.sideNavigation a:hover::after {
+  width: 100%;
+}
+.sideNavigation:hover {
+  box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.4);
+}
+.sideNavigation .dashboardLogo {
+  width: 70px;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.sideNavigation .dashboardLogo:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 20px 30px rgba(255, 255, 255, 0.1);
+}
+.sideNavigation ul {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+.sideNavigation ul li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 0.5rem;
+}
+.sideNavigation ul li:hover, .sideNavigation ul li:active, .sideNavigation ul li.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+}
+.sideNavigation ul li img {
+  width: 24px;
+}
+.sideNavigation .userDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+.sideNavigation .userDetails span.userIcon {
+  font-size: 14px;
+  font-weight: bold;
+  background: white;
+  color: black;
+  padding: 0.2rem;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+  border-radius: 1rem;
+  box-shadow: 0px 0px 0px rgba(255, 255, 255, 0);
+}
+.sideNavigation .userDetails span.userIcon:hover {
+  box-shadow: 0px 3px 20px rgba(255, 255, 255, 0.8);
+}
+.sideNavigation .userDetails img.logoutIcon {
+  width: 24px;
+  cursor: pointer;
+}
+
+.contentContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-content: flex-start;
+  width: calc(100% - 220px);
+  background: rgb(239, 239, 239);
+  min-height: 100vh;
+  position: fixed;
+  left: 220px;
+  background: linear-gradient(140.24deg, #cbcbcb -1.14%, #ffffff 54.43%, #cbcbcb 98.1%);
+}
+.contentContainer .contentHeader {
+  background: white;
+  width: 100%;
+  padding: 0 2rem;
+  display: flex;
+  height: 80px;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+.contentContainer .contentHeader h1 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -1px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.contentContainer .toolBarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: rgb(40, 40, 40);
+  color: white;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  gap: 0.5rem;
+  height: 50px;
+}
+.contentContainer .toolBarHeader .buttonSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.contentContainer .toolBarHeader .buttonSection button {
+  padding: 0.35rem;
+  border-radius: 0.4rem;
+  border: 0px;
+  color: white;
+  background: black;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.contentContainer .toolBarHeader .buttonSection button img {
+  width: 20px;
+}
+.contentContainer .toolBarHeader .buttonSection button:hover {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.12);
+}
+.contentContainer .toolBarHeader .searchTextBox {
+  text-indent: 0.3rem;
+  padding: 0.35rem;
+  border-radius: 1rem;
+  border: 0px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
+  width: 180px;
+}
+.contentContainer .toolBarHeader .searchTextBox:hover {
+  box-shadow: 0px 10px 10px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  width: 300px;
+}
+.contentContainer .collectionGrid {
+  display: flex;
+  overflow-y: auto;
+  width: 100%;
+  height: calc(100vh - 80px - 50px);
+  padding: 1rem;
+  flex-wrap: wrap;
+  align-content: stretch;
+  overflow-y: scroll;
+  gap: 1rem;
+}
+.contentContainer .collectionGrid .collectionItem {
+  width: 15.5rem;
+  background: white;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2rem;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative;
+  gap: 1rem;
+}
+.contentContainer .collectionGrid .collectionItem:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}
+.contentContainer .collectionGrid .collectionItem input[type=checkbox] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.contentContainer .collectionGrid .collectionItem .collectionNumber {
+  padding: 0.5rem;
+  background: black;
+  color: white;
+  position: absolute;
+  right: auto;
+  bottom: -10px;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgb(71, 71, 71);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+.contentContainer .collectionGrid .collectionItem .imageGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+}
+.contentContainer .collectionGrid .collectionItem .imageGrid img {
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+.contentContainer .collectionGrid .collectionItem span.itemName {
+  font-size: 1rem;
+  line-height: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  width: auto;
+  position: relative;
+}
+.contentContainer .collectionGrid .collectionItem span.itemName::after {
+  content: "";
+  width: 0%;
+  height: 2px;
+  position: absolute;
+  bottom: -3px;
+  left: 0px;
+  background: rgb(0, 0, 0);
+}
+.contentContainer .collectionGrid .collectionItem span.itemName:hover::after {
+  width: 100%;
+}
+
+.highlightedCollection {
+  background: rgb(244, 231, 216) !important;
+}
+
+  .generateImageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 0rem;
+  position: fixed;
+  top: 0px;
+  width: calc(100% - 220px);
+  gap: 1rem;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(136.89deg, #414141 -1%, #000000 25.04%, #000000 67.18%, #3c3c3c 96.74%);
+}
+.generateImageContainer span {
+  font-size: 1.5rem;
+  color: white;
+}
+.generateImageContainer img {
+  width: 24px;
+}
+.generateImageContainer input[type=text] {
+  text-indent: 0.3rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
+  width: 100%;
+  font-size: 1rem;
+}
+.generateImageContainer input[type=text]:hover {
+  box-shadow: 0px 10px 10px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+}
